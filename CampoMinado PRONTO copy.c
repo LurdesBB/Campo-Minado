@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include <time.h>
 
-typedef struct{
-    int EhBOMBA, ABERTA, VIZINHO;
+typedef struct{ //Nessa struct criamos 3 variaveis para serem 3 matrizes, uma com as bombas, outra para mostrar se a posição esta
+    int EhBOMBA, ABERTA, VIZINHO; // aberta e a ultima para nos mostrar quantas bombas tem nos seus vizinhos
 }No;
 
 No tabuleiro[21][21];
 
-#define LINHA_FACIL 10
+#define LINHA_FACIL 10 //Aqui definimos cada uma das pré configurações de jogo, sendo elas fácil, médio e dificil.
 #define COLUNA_FACIL 10
 #define MINAS_FACIL 10
 
@@ -20,7 +20,7 @@ No tabuleiro[21][21];
 #define COLUNA_DIFICIL 21
 #define MINAS_DIFICIL 90
 
-void inicia(int linha, int coluna){
+void inicia(int linha, int coluna){ //Nessa função as 3 matrizes são iniciadas com 0
     int i = 0, j = 0;
 
     for(i=0; i<linha; i++){
@@ -32,7 +32,7 @@ void inicia(int linha, int coluna){
     }
 }
 
-void sortear(int linha, int coluna, int minas){
+void sortear(int linha, int coluna, int minas){ //Essa função serve para sortear as bombas em lugares aleatórios
     int i, j;
     srand(time(NULL));
 
@@ -47,7 +47,7 @@ void sortear(int linha, int coluna, int minas){
     }
 }
 
-int coordenadaValida(int i, int j, int linha, int coluna){
+int coordenadaValida(int i, int j, int linha, int coluna){ //Aqui verifica se a coordenada é válida
     if(i>=0 && i<linha && j>=0 && j<coluna){
         return 1;
     }else{
@@ -55,9 +55,9 @@ int coordenadaValida(int i, int j, int linha, int coluna){
     }
 }
 
-int quantBombasVizinhas(int i, int j, int linha, int coluna){
-    int quantidade = 0;
+int quantBombasVizinhas(int i, int j, int linha, int coluna){ //Aqui ele verifica cada posição em volta de uma posição e retorna o número de bombas que está em volta dela
 
+    int quantidade = 0;                                       
     if(coordenadaValida(i-1,j,linha,coluna) && tabuleiro[i-1][j].EhBOMBA){
         quantidade++;
     }
@@ -85,17 +85,17 @@ int quantBombasVizinhas(int i, int j, int linha, int coluna){
     return quantidade;
 }
 
-void contarBombas(int linha, int coluna){
+void contarBombas(int linha, int coluna){ //Essa função serve para sabermos quantas bombas existem perto de cada posição
     int i, j;
 
     for(i=0; i<linha; i++){
         for(j=0; j<coluna; j++){
-            tabuleiro[i][j].VIZINHO = quantBombasVizinhas(i,j,linha,coluna);
+            tabuleiro[i][j].VIZINHO = quantBombasVizinhas(i,j,linha,coluna); //Para contarmos elas, mandamos para essa função
         }
     }
 }
 
-void imprimirl(int linha, int coluna){
+void imprimirl(int linha, int coluna){ //Aqui imprimimos o tabuleiro com letras
     int i, j;
     char letra = 'A';
 
@@ -180,7 +180,7 @@ void imprimirl(int linha, int coluna){
     }
 }
 
-void imprimirn(int linha, int coluna){
+void imprimirn(int linha, int coluna){ //Aqui imprimimos o tabuleiro com números
     int i, j;
 
     if(linha==10){
@@ -262,7 +262,7 @@ void imprimirn(int linha, int coluna){
     }
 }
 
-void imprimirnl(int linha, int coluna){
+void imprimirnl(int linha, int coluna){ //Aqui imprimimos o tabuleiro com números nas linhas e letras nas colunas
     int i, j;
     char letra = 'A';
 
@@ -342,7 +342,7 @@ void imprimirnl(int linha, int coluna){
     }
 }
 
-void abrirNo(int i, int j, int l, int c){
+void abrirNo(int i, int j, int l, int c){ //abre a coordenada escolhida
     if(coordenadaValida(i, j,l,c) == 1 && tabuleiro[i][j].ABERTA == 0){
         tabuleiro[i][j].ABERTA = 1;
         if(tabuleiro[i][j].VIZINHO == 0){
@@ -354,7 +354,7 @@ void abrirNo(int i, int j, int l, int c){
     }
 }
 
-int ganhou(int linha, int coluna){
+int ganhou(int linha, int coluna){ //verifica se a quantidade de de espaços que faltam são todos bombas ou se existe um que não é bomba, caso seja isso, você perdeu
     int i, j, quantidade = 0;
 
     for(i=0; i<linha; i++){
@@ -367,7 +367,7 @@ int ganhou(int linha, int coluna){
     return quantidade;
 }
 
-int traduz(char letra){
+int traduz(char letra){ //Faz a tradução de letras para números, para facilitar o código
     int numero;
     if('A' <= letra && letra <= 'Z'){
         // Se for uma letra maiúscula
@@ -383,75 +383,75 @@ void jogar(int l, int c){
     char linhac, colunac, colunacc;
     int linha, coluna, opc;
 
-    printf("\n\nDeseja jogar usando os numeros ou as letras do teclado?");
+    printf("\n\nDeseja jogar usando os numeros ou as letras do teclado?"); //Aqui o usuario escolhe como quer jogar
     printf("\nDigite (1) para numeros, (2) para letras ou (3) para numeros e letras: ");
     scanf("%d",&opc);
     printf("\n\t\t\tCAMPO MINADO\n");
 
-    if(opc == 2){
+    if(opc == 2){ //Se ele escolher 2 vem para cá, então ele jogará com letras
         do{
-            imprimirl(l,c);
+            imprimirl(l,c); //mando para essa função o número de linhas e colunas para ser feito o tabuleiro
             do{
-                printf("\nDigite as coordenadas de linha e coluna: ");
+                printf("\nDigite as coordenadas de linha e coluna: "); //Aqui o usuario escolhe a coordenada que quer abrir
                 scanf(" %c %c",&linhac,&colunac);
 
-                linha = traduz(linhac);
-                coluna = traduz(colunac);
+                linha = traduz(linhac); //Mando as duas variaveis para essa função porque são letras, essa função traduz elas para números (a = 0, b = 1, etc), já que o resto do código funciona com números fica mais facil
+                coluna = traduz(colunac); 
 
                 if(coordenadaValida(linha,coluna,l,c) == 0 || tabuleiro[linha][coluna].ABERTA == 1){
-                    printf("\nA coordenada eh invalida ou ja esta aberta!");
+                    printf("\nA coordenada eh invalida ou ja esta aberta!"); //verifica se a coordenada escolhida é valida
                 }
-            }while(coordenadaValida(linha,coluna,l,c) == 0 || tabuleiro[linha][coluna].ABERTA == 1);
+            }while(coordenadaValida(linha,coluna,l,c) == 0 || tabuleiro[linha][coluna].ABERTA == 1); //faz enquanto ter coordenadas validas
 
-            abrirNo(linha,coluna,l,c);
+            abrirNo(linha,coluna,l,c); //Abre a coordenada escolhida
         }while(ganhou(l,c) != 0 && tabuleiro[linha][coluna].EhBOMBA == 0);
 
-        if(tabuleiro[linha][coluna].EhBOMBA){
+        if(tabuleiro[linha][coluna].EhBOMBA){ //se a coordenada escolhida é uma bomba, você perdeu
             printf("\n\tVOCE PERDEU!!!\n");
         }else{
             printf("\n\tPARABENS VOCE GANHOU!!!\n");
         }
         imprimirn(l,c);
-    }else if(opc == 1){
+    }else if(opc == 1){ //Se ele escolher 1, ele jogará com números
         do{
-            imprimirn(l,c);
+            imprimirn(l,c); //mando para essa função o número de linhas e colunas para ser feito o tabuleiro
             do{
-                printf("\nDigite as coordenadas de linha e coluna: ");
+                printf("\nDigite as coordenadas de linha e coluna: "); //Aqui o usuario escolhe a coordenada que quer abrir
                 scanf("%d %d",&linha,&coluna);
 
                 if(coordenadaValida(linha,coluna,l,c) == 0 || tabuleiro[linha][coluna].ABERTA == 1){
-                    printf("\nA coordenada eh invalida ou ja esta aberta!");
+                    printf("\nA coordenada eh invalida ou ja esta aberta!"); //verifica se a coordenada escolhida é valida
                 }
-            }while(coordenadaValida(linha,coluna,l,c) == 0 || tabuleiro[linha][coluna].ABERTA == 1);
+            }while(coordenadaValida(linha,coluna,l,c) == 0 || tabuleiro[linha][coluna].ABERTA == 1); //faz enquanto ter coordenadas validas
 
-            abrirNo(linha,coluna,l,c);
+            abrirNo(linha,coluna,l,c); //Abre a coordenada escolhida
         }while(ganhou(l,c) != 0 && tabuleiro[linha][coluna].EhBOMBA == 0);
 
-        if(tabuleiro[linha][coluna].EhBOMBA){
+        if(tabuleiro[linha][coluna].EhBOMBA){ //se a coordenada escolhida é uma bomba, você perdeu
             printf("\n\tVOCE PERDEU!!!\n");
         }else{
             printf("\n\tPARABENS VOCE GANHOU!!!\n");
         }
         imprimirn(l,c);
-    }else if(opc == 3){
+    }else if(opc == 3){ //Se o usuario escolheu 3, ele jogará com números nas linhas e letras nas colunas
         do{
-            imprimirnl(l,c);
+            imprimirnl(l,c); //mando para essa função o número de linhas e colunas para ser feito o tabuleiro
             do{
-                printf("\nDigite as coordenadas de linha (numero) e coluna (letra): ");
+                printf("\nDigite as coordenadas de linha (numero) e coluna (letra): "); //Aqui o usuario escolhe a coordenada que quer abrir
                 scanf("%d",&linha);
                 scanf("%c",&colunacc);
 
-                coluna = traduz(colunacc);
+                coluna = traduz(colunacc); //Mando somente uma variavel para essa função porque são letras, essa função traduz elas para números (a = 0, b = 1, etc), já que o resto do código funciona com números fica mais facil
 
                 if(coordenadaValida(linha,coluna,l,c) == 0 || tabuleiro[linha][coluna].ABERTA == 1){
-                    printf("\nA coordenada eh invalida ou ja esta aberta!");
+                    printf("\nA coordenada eh invalida ou ja esta aberta!"); //verifica se a coordenada escolhida é valida
                 }
-            }while(coordenadaValida(linha,coluna,l,c) == 0 || tabuleiro[linha][coluna].ABERTA == 1);
+            }while(coordenadaValida(linha,coluna,l,c) == 0 || tabuleiro[linha][coluna].ABERTA == 1); //faz enquanto ter coordenadas validas
 
-            abrirNo(linha,coluna,l,c);
+            abrirNo(linha,coluna,l,c); //Abre a coordenada escolhida
         }while(ganhou(l,c) != 0 && tabuleiro[linha][coluna].EhBOMBA == 0);
 
-        if(tabuleiro[linha][coluna].EhBOMBA){
+        if(tabuleiro[linha][coluna].EhBOMBA){ //se a coordenada escolhida é uma bomba, você perdeu
             printf("\n\tVOCE PERDEU!!!\n");
         }else{
             printf("\n\tPARABENS VOCE GANHOU!!!\n");
@@ -465,7 +465,7 @@ int jogo(){
     int linha, coluna, minas;
 
      do{
-        printf("Escolha a dificuldade:\n");
+        printf("Escolha a dificuldade:\n"); //Aqui a pessoa escolhe a dificuldade em que quer jogar
         printf("1. Facil\n");
         printf("2. Medio\n");
         printf("3. Dificil\n");
@@ -493,18 +493,18 @@ int jogo(){
                 printf("Escolha inválida.\n");
                 return 1;
         }
-        inicia(linha,coluna);
-        sortear(linha,coluna,minas);
-        contarBombas(linha,coluna);
-        jogar(linha,coluna);
-        printf("\n\tDeseja jogar novamente?\n\t\t[s/n]\n");
+        inicia(linha,coluna); //Mandamos a pré definição de linhas e colunas escolhidas para essa primeira função
+        sortear(linha,coluna,minas); //Depois de iniciar, mandamos para essa
+        contarBombas(linha,coluna); //Após sortear as bombas, entramos nessa função
+        jogar(linha,coluna); //Finalmente entramos na função do jogo mesmo
+        printf("\n\tDeseja jogar novamente?\n\t\t[s/n]\n"); //Aqui caso o usuario deseje jogar novamente é só ele digitar "s", assim ira abrir novamente o menu com as escolhas de dificuldade
         scanf(" %c",&opcao);
-    }while(opcao == 's');
+    }while(opcao == 's'); //Se for qualquer coisa diferente de "s", ele encerrará o programa
 
     return 0;
 }
 
 int main(){
-    jogo();
+    jogo(); //função principal do jogo
     return 0;
 }
